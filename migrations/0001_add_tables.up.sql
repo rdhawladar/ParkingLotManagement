@@ -1,0 +1,70 @@
+-- Create ENUM type for user roles
+CREATE TYPE user_role AS ENUM ('user', 'manager');
+
+
+-- Users table
+CREATE TABLE Users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  role user_role NOT NULL DEFAULT 'user',
+  created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Parking Lots table
+CREATE TABLE ParkingLots (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  total_spaces INTEGER NOT NULL,
+  manager_id INTEGER REFERENCES Users(id) ON DELETE SET NULL,
+  created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Vehicles table
+CREATE TABLE Vehicles (
+  id SERIAL PRIMARY KEY,
+  license_plate VARCHAR(255) NOT NULL UNIQUE,
+  owner_id INTEGER REFERENCES Users(id) ON DELETE CASCADE,
+  created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Parking Slots table
+CREATE TABLE ParkingSlots (
+  id SERIAL PRIMARY KEY,
+  parking_lot_id INTEGER NOT NULL REFERENCES ParkingLots(id) ON DELETE CASCADE,
+  slot_number INTEGER NOT NULL,
+  is_available BOOLEAN DEFAULT TRUE,
+  is_under_maintenance BOOLEAN DEFAULT FALSE,
+  CONSTRAINT unique_slot_per_lot UNIQUE (parking_lot_id, slot_number),
+  created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Parking Sessions table
+CREATE TABLE ParkingSessions (
+  id SERIAL PRIMARY KEY,
+  vehicle_id INTEGER NOT NULL REFERENCES Vehicles(id) ON DELETE CASCADE,
+  parking_lot_id INTEGER NOT NULL REFERENCES ParkingLots(id) ON DELETE CASCADE,
+  parking_slot_id INTEGER REFERENCES ParkingSlots(id) ON DELETE SET NULL,
+  parked_at TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  unparked_at TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
+  created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Maintenance table
+CREATE TABLE Maintenance (
+  id SERIAL PRIMARY KEY,
+  parking_lot_id INTEGER NOT NULL REFERENCES ParkingLots(id) ON DELETE CASCADE,
+  parking_slot_id INTEGER REFERENCES ParkingSlots(id) ON DELETE CASCADE,
+  start_time TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  end_time TIMESTAMP WITHOUT TIME ZONE DEFAULT NULL,
+  created_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Indexes for optimized queries
+CREATE INDEX idx_parking_sessions_unparked ON ParkingSessions(parking_lot_id, unparked_at) WHERE unparked_at IS NULL;
+CREATE INDEX idx_maintenance_current ON Maintenance(parking_slot_id, end_time) WHERE end_time IS NULL;

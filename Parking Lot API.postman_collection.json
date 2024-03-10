@@ -1,0 +1,366 @@
+{
+	"info": {
+		"_postman_id": "4dd8a1f6-d97e-41b8-97cd-4db84ad1499d",
+		"name": "Parking Lot API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10621339"
+	},
+	"item": [
+		{
+			"name": "Create Parkinglots",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "user",
+						"value": "Riad"
+					},
+					{
+						"key": "members",
+						"value": "10"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"LOT 1\",\n    \"manager_id\":1,\n    \"total_spaces\":50\n}"
+				},
+				"url": {
+					"raw": "{{url}}/parkinglots",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"parkinglots"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Parkinglots Status",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "user",
+						"value": "Riad"
+					},
+					{
+						"key": "members",
+						"value": "10"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{url}}/parkinglots/8",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"parkinglots",
+						"8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "toggleMaintenanceMode",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "user",
+						"value": "Riad"
+					},
+					{
+						"key": "members",
+						"value": "10"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"is_under_maintenance\": true\n}"
+				},
+				"url": {
+					"raw": "{{url}}/slots/50/maintenance",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"slots",
+						"50",
+						"maintenance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Park Vehicle",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "user",
+						"value": "Riad"
+					},
+					{
+						"key": "members",
+						"value": "10"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"lot_id\": 8,\n    \"license_plate\": \"12345\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/park",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"park"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "unparkVehicle",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "user",
+						"value": "Riad"
+					},
+					{
+						"key": "members",
+						"value": "10"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"license_plate\": \"12345\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/unpark",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"unpark"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "dailyReport",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "user",
+						"value": "Riad"
+					},
+					{
+						"key": "members",
+						"value": "10"
+					},
+					{
+						"key": "Content-Type",
+						"value": "text/plain"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"license_plate\": \"12345\"\n}"
+				},
+				"url": {
+					"raw": "{{url}}/reports/daily?date=2024-03-10",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"reports",
+						"daily"
+					],
+					"query": [
+						{
+							"key": "date",
+							"value": "2024-03-10",
+							"description": "If not date provided it will take current dates"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ping",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "user",
+						"value": "Riad",
+						"type": "text"
+					},
+					{
+						"key": "members",
+						"value": "10",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"rdhawladar@gmail.com\",\n    \"password\": \"12341244\"\n}",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080"
+				}
+			},
+			"response": []
+		}
+	]
+}
