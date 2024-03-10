@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ParkingLotManagement/app/model"
 	"fmt"
 	"math"
 	"net/http"
@@ -34,55 +35,6 @@ func initDB() {
 	fmt.Println("Connected to the database successfully!")
 }
 
-// ParkingLotRequest defines the expected request body for creating a parking lot
-type ParkingLotRequest struct {
-	Name        string `json:"name"`
-	TotalSpaces int    `json:"total_spaces"`
-	ManagerID   int    `json:"manager_id"`
-}
-
-// ParkingLot represents the ParkingLots table structure
-type ParkingLot struct {
-	ID          int    `db:"id"`
-	Name        string `db:"name"`
-	TotalSpaces int    `db:"total_spaces"`
-	ManagerID   int    `db:"manager_id"`
-}
-
-// VehicleParkingRequest defines the expected request body for parking a vehicle
-type VehicleParkingRequest struct {
-	LotID        int    `json:"lot_id"`
-	LicensePlate string `json:"license_plate"`
-	OwnerID      int    `json:"owner_id"`
-}
-
-// ParkingSlot represents the ParkingSlots table structure
-type ParkingSlot struct {
-	ID                 int  `db:"id"`
-	ParkingLotID       int  `db:"parking_lot_id"`
-	SlotNumber         int  `db:"slot_number"`
-	IsAvailable        bool `db:"is_available"`
-	IsUnderMaintenance bool `db:"is_under_maintenance"`
-}
-
-// VehicleUnparkingRequest defines the expected request body for unparking a vehicle
-type VehicleUnparkingRequest struct {
-	LicensePlate string `json:"license_plate"`
-}
-
-// ParkingSlotStatus represents the status of a parking slot.
-type ParkingSlotStatus struct {
-	SlotNumber         int    `db:"slot_number" json:"slot_number"`
-	IsAvailable        bool   `db:"is_available" json:"is_available"`
-	IsUnderMaintenance bool   `db:"is_under_maintenance" json:"is_under_maintenance"`
-	VehicleLicense     string `db:"license_plate" json:"vehicle_license,omitempty"` // Empty if no vehicle is parked
-}
-
-// MaintenanceModeRequest represents the status of a parking slot.
-type MaintenanceModeRequest struct {
-	IsUnderMaintenance bool `json:"is_under_maintenance"`
-}
-
 func main() {
 	// Initialize the database connection
 	initDB()
@@ -103,7 +55,7 @@ func main() {
 }
 
 func createParkingLot(c *gin.Context) {
-	var request ParkingLotRequest
+	var request model.ParkingLotRequest
 
 	// Bind the JSON body to the ParkingLotRequest struct
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -148,7 +100,7 @@ func createParkingLot(c *gin.Context) {
 }
 
 func parkVehicle(c *gin.Context) {
-	var request VehicleParkingRequest
+	var request model.VehicleParkingRequest
 
 	// Bind the JSON body to the VehicleParkingRequest struct
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -176,7 +128,7 @@ func parkVehicle(c *gin.Context) {
 	}
 
 	// Find the first available parking slot in the requested lot
-	var slot ParkingSlot
+	var slot model.ParkingSlot
 	err = tx.QueryRowx(`
 		SELECT id, parking_lot_id, slot_number, is_available, is_under_maintenance 
 		FROM ParkingSlots 
@@ -218,7 +170,7 @@ func parkVehicle(c *gin.Context) {
 }
 
 func unparkVehicle(c *gin.Context) {
-	var request VehicleUnparkingRequest
+	var request model.VehicleUnparkingRequest
 
 	// Bind the JSON body to the VehicleUnparkingRequest struct
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -280,7 +232,7 @@ func viewParkingLotStatus(c *gin.Context) {
 	lotID := c.Param("id") // Get the parking lot ID from the route parameter
 
 	// Prepare a slice to hold the results
-	var slots []ParkingSlotStatus
+	var slots []model.ParkingSlotStatus
 
 	// Query the database for slot statuses in the specified lot
 	err := db.Select(&slots, `
@@ -306,7 +258,7 @@ func viewParkingLotStatus(c *gin.Context) {
 }
 
 func toggleMaintenanceMode(c *gin.Context) {
-	var request MaintenanceModeRequest
+	var request model.MaintenanceModeRequest
 	slotID := c.Param("id") // Assuming you're using the slot ID as a URL parameter
 
 	// Bind the JSON body to the request struct
